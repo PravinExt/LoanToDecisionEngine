@@ -54,12 +54,15 @@ namespace LoanToDecisionEngine
             string json = JsonConvert.SerializeObject(pmobj);
 
             //Step machine API URL
-            var url = "https://g9yh14f7ve.execute-api.ap-south-1.amazonaws.com/Authorizeddev/execution";
+            //var url = "https://g9yh14f7ve.execute-api.ap-south-1.amazonaws.com/Authorizeddev/execution";
+            var url = Environment.GetEnvironmentVariable("StepFunctionURL");
 
             StepCallBody stepbody = new StepCallBody();
             stepbody.input = json;
-            stepbody.name = "MyExecution";
-            stepbody.stateMachineArn = "arn:aws:states:ap-south-1:052987743965:stateMachine:PBLoanProcessOrchestration";
+            //stepbody.name = "MyExecution";
+            stepbody.name = Environment.GetEnvironmentVariable("StepBodyName");
+            //stepbody.stateMachineArn = "arn:aws:states:ap-south-1:052987743965:stateMachine:PBLoanProcessOrchestration";
+            stepbody.stateMachineArn = Environment.GetEnvironmentVariable("StateMachineArn");
 
             string stepjson = JsonConvert.SerializeObject(stepbody);
 
@@ -67,7 +70,7 @@ namespace LoanToDecisionEngine
 
             var client = new HttpClient();
             //Need creditor Authorization access token
-            client.DefaultRequestHeaders.Add("Authorization", "eyJraWQiOiJXSlpET21BQ0RuS3FHVVhZU2VFXC9pU0J5Y2VRS0xLNlJXdmFiK2pXcDFyWT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIyODEwZmM1OS1lZjNiLTRjNjctYmY5Ni0xMzEzZjExYjdiMzUiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIHBob25lIG9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXV0aF90aW1lIjoxNjMzNjY3MzMzLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGgtMS5hbWF6b25hd3MuY29tXC9hcC1zb3V0aC0xX281WHZTRDluOCIsImV4cCI6MTYzMzc1MzczMywiaWF0IjoxNjMzNjY3MzMzLCJ2ZXJzaW9uIjoyLCJqdGkiOiJhYzQ2YThjYS03YmNlLTQyNzEtOTEzYy1kODU0ZjA4NGY2ZTYiLCJjbGllbnRfaWQiOiI0Y2EwNDU1ajM2cXVyNmVtdWY0bzhjZmxrYyIsInVzZXJuYW1lIjoiY3JlZGl0b3IxIn0.vKCKQEy5BDGOP3kuoWUUCIyR6u8q9VazYlt5jVZWzbLigMm4vFiXEBLB4Nxm75zV7BsxVOszuo7jWkJ0_HIiPuBEfw-jdXEYE674cxgIuETWuAsZEWJIG5KlPSgLH6cmpW90k9-Mur4jwMHLgc8jX0osIe8gZPpHnIs-5mmGc8U9UVQB16MqUk7-EXF_r9UUeiYboG05zBOzC7nWUl0Mw61Sbt6Eb11BtmSOiZt2xtt_ZEN66tcXckvuVL8DiezEuyn7c1ebuBgVUFQbVN7okLMcWSw6X9OEalNl4PiuKj3t29rLv6T9K86972Ocq8t4tAasnOlGSzTDo1OJ8x06AA");
+            client.DefaultRequestHeaders.Add("Authorization", "eyJraWQiOiJXSlpET21BQ0RuS3FHVVhZU2VFXC9pU0J5Y2VRS0xLNlJXdmFiK2pXcDFyWT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIyODEwZmM1OS1lZjNiLTRjNjctYmY5Ni0xMzEzZjExYjdiMzUiLCJldmVudF9pZCI6Ijk0Yzk0MzViLTM2ZmItNDhmOS05MWYwLTY0ODRhNzQ5NzA0ZiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4gcGhvbmUgb3BlbmlkIHByb2ZpbGUgZW1haWwiLCJhdXRoX3RpbWUiOjE2MzQwOTc2NTcsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5hcC1zb3V0aC0xLmFtYXpvbmF3cy5jb21cL2FwLXNvdXRoLTFfbzVYdlNEOW44IiwiZXhwIjoxNjM0MTg0MDU3LCJpYXQiOjE2MzQwOTc2NTcsInZlcnNpb24iOjIsImp0aSI6ImJmY2Q0NDE2LTcyN2QtNDM3ZC05ZDhiLTdmYWI3OTg4OGRlNCIsImNsaWVudF9pZCI6IjRjYTA0NTVqMzZxdXI2ZW11ZjRvOGNmbGtjIiwidXNlcm5hbWUiOiJjcmVkaXRvcjEifQ.XCc6fioShxcOoeuHHYmaH0efyIp9MqERmaA8QxfkGWdNDLaSgIvQNttcVmEZZspegxFHWbp1jJRI6zrztiYnw4O0uIAL_6lnoBRzouIZth164QAoFmJV3HogerCj8Ot0_P904UbuPEKSNjDvAwaTlvJ2ZoiNGC5-WOioTI7rwCn-keS5imY8imKaXzecVBu6zKpkkgsvzwGSzjzCe4mplVMJvuWZrB_bzNPb18_DcPtHCenqUn3koRoH7tgT3LZkgZt6-Hne4nos2wwpmxQRS429kSJd_hPCWWTtmw4NOMpqL6F5H53Hc2sMSl0z-VDO11YpQ0j2r83pGR3hMPFsDg");
             var response = await client.PostAsync(url, bodydata);
 
             await Task.CompletedTask;

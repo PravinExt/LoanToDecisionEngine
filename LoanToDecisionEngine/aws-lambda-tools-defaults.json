@@ -20,7 +20,7 @@
     "function-role"        : "arn:aws:iam::052987743965:role/service-role/LoanToDecisionEngine-role-iuvlnu92",
     "dead-letter-target-arn" : "arn:aws:sqs:ap-south-1:052987743965:DecisionQueueListener",
     "tracing-mode"           : "PassThrough",
-    "environment-variables"  : "\"StateMachineArn\"=\"arn:aws:states:ap-south-1:052987743965:stateMachine:PBLoanProcessOrchestration\";\"StepFunctionURL\"=\" https://g9yh14f7ve.execute-api.ap-south-1.amazonaws.com/Authorizeddev/execution\";\"StepBodyName\"=\"MyExecution\"",
+    "environment-variables"  : "\"ExternalAccessKey\"=\"AKIAQYVSQZ3O3LYYLYW3\";\"ExternalSecreteKey\"=\"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\";\"StateMachineArn\"=\"arn:aws:states:ap-south-1:052987743965:stateMachine:PBLoanProcessOrchestration\";\"StepFunctionURL\"=\" https://g9yh14f7ve.execute-api.ap-south-1.amazonaws.com/Authorizeddev/execution\";\"StepBodyName\"=\"MyExecution\"",
     "image-tag"              : "",
     "function-architecture"  : "x86_64"
 }

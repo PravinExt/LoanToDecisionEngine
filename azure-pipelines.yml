@@ -35,15 +35,12 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
     
-- task: LambdaNETCoreDeploy@1
+- task: LambdaDeployFunction@1
   inputs:
     awsCredentials: 'awsconnection'
     regionName: 'ap-south-1'
-    command: 'deployFunction'
-    packageOnly: false
-    lambdaProjectPath: './LoanToDecisionEngine'
+    deploymentMode: 'codeonly'
     functionName: 'LoanToDecisionEngine'
-    functionRole: 'LoanToDecisionEngine-role-ldszk1c6'
-    functionHandler: 'LoanToDecisionEngine::LoanToDecisionEngine.Function::FunctionHandler'
-    functionMemory: 512
-    functionTimeout: 60
+    codeLocation: 'localfile'
+    localZipFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    outputVariable: 'LoanToDecisionEngine'

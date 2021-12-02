@@ -35,15 +35,25 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
     
-- task: LambdaNETCoreDeploy@1
+- task: LambdaDeployFunction@1
   inputs:
     awsCredentials: 'awsconnection'
     regionName: 'ap-south-1'
-    command: 'deployFunction'
-    packageOnly: false
-    lambdaProjectPath: './LoanToDecisionEngine'
+    deploymentMode: 'codeandconfiguration'
     functionName: 'LoanToDecisionEngine'
-    functionRole: 'LoanToDecisionEngine-role-ldszk1c6'
     functionHandler: 'LoanToDecisionEngine::LoanToDecisionEngine.Function::FunctionHandler'
-    functionMemory: 512
-    functionTimeout: 60
+    runtime: 'dotnetcore2.1'
+    codeLocation: 'localfile'
+    localZipFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    roleARN: 'cloudform-LambdaExecutionRole-1XRKE2AES4R75'
+    environment: |
+      Database=CreditApproval
+      ExternalAccessKey=AKIAQYVSQZ3O3LYYLYW3
+      ExternalSecreteKey=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
+      PWD=admin8910
+      Port=3306
+      Server=applicationsubmission.cikv7fwlsku8.ap-south-1.rds.amazonaws.com
+      StateMachineArn=arn:aws:states:ap-south-1:618393550001:stateMachine:PBLoanProcessOrchestration
+      StepBodyName=MyExecution
+      StepFunctionURL=https://g9yh14f7ve.execute-api.ap-south-1.amazonaws.com/Authorizeddev/execution
+      UID=admin

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Amazon;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
 using Amazon.Runtime;
@@ -57,20 +58,18 @@ namespace LoanToDecisionEngine
             string StateMachineArn = Environment.GetEnvironmentVariable("StateMachineArn");
             string ExternalAccessKey = Environment.GetEnvironmentVariable("ExternalAccessKey");
             string ExternalSecreteKey = Environment.GetEnvironmentVariable("ExternalSecreteKey");
+            string RegionName = Environment.GetEnvironmentVariable("StepFunctionRegion");
 
             var awsCredentials = new BasicAWSCredentials(ExternalAccessKey, ExternalSecreteKey);
-            var awsclient = new Amazon.StepFunctions.AmazonStepFunctionsClient(awsCreden‌​tials, Amazon.RegionEndpoint.APSouth1);
+            var awsclient = new Amazon.StepFunctions.AmazonStepFunctionsClient(awsCreden‌​tials, RegionEndpoint.GetBySystemName(RegionName));
 
             Amazon.StepFunctions.Model.StartExecutionRequest req = new Amazon.StepFunctions.Model.StartExecutionRequest();
 
             req.Input = json;
             req.Name = StepBodyName;
             req.StateMachineArn = StateMachineArn;
-             
+
             var aws_response = await awsclient.StartExecutionAsync(req);
-
-
-
 
             await Task.CompletedTask;
         }

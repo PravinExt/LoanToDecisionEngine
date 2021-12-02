@@ -58,7 +58,7 @@ namespace LoanToDecisionEngine
             string StateMachineArn = Environment.GetEnvironmentVariable("StateMachineArn");
             string ExternalAccessKey = Environment.GetEnvironmentVariable("ExternalAccessKey");
             string ExternalSecreteKey = Environment.GetEnvironmentVariable("ExternalSecreteKey");
-            string RegionName = Environment.GetEnvironmentVariable("StepFunctionRegion");
+            string RegionName = Environment.GetEnvironmentVariable("StepFunctionRegion"); 
 
             var awsCredentials = new BasicAWSCredentials(ExternalAccessKey, ExternalSecreteKey);
             var awsclient = new Amazon.StepFunctions.AmazonStepFunctionsClient(awsCreden‌​tials, RegionEndpoint.GetBySystemName(RegionName));

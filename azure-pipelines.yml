@@ -35,20 +35,23 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
     
-- task: LambdaDeployFunction@1
+- task: LambdaNETCoreDeploy@1
   inputs:
     awsCredentials: 'awsconnection'
     regionName: 'ap-south-1'
-    deploymentMode: 'codeandconfiguration'
+    command: 'deployFunction'
+    packageOnly: false
+    lambdaProjectPath: './LoanToDecisionEngine'
     functionName: 'LoanToDecisionEngine'
+    functionRole: 'cloudform-LambdaExecutionRole-1XRKE2AES4R75'
     functionHandler: 'LoanToDecisionEngine::LoanToDecisionEngine.Function::FunctionHandler'
-    runtime: 'dotnetcore2.1'
-    codeLocation: 'localfile'
-    localZipFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    roleARN: 'cloudform-LambdaExecutionRole-1XRKE2AES4R75'
-    environment: |
-      ExternalAccessKey=AKIAY76ZAXSYT6XEKG7H
-      ExternalSecreteKey=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
-      StateMachineArn=arn:aws:states:ap-south-1:618393550001:stateMachine:PBLoanProcessOrchestration
-      StepBodyName=MyExecution
-      StepFunctionRegion=ap-south-1
+    functionMemory: 512
+    functionTimeout: 50
+
+- task: AWSCLI@1
+  inputs:
+    awsCredentials: 'awsconnection'
+    regionName: 'ap-south-1'
+    awsCommand: 'lambda'
+    awsSubCommand: 'update-function-configuration'
+    awsArguments: '--function-name UpdateLoanStatus --environment "Variables={ExternalAccessKey=AKIAY76ZAXSYT6XEKG7H,ExternalSecreteKey=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,StateMachineArn=arn:aws:states:ap-south-1:618393550001:stateMachine:PBLoanProcessOrchestration,StepBodyName=MyExecution,StepFunctionRegion=ap-south-1}"'
